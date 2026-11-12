@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from pydantic import BaseModel,ConfigDict
+from pydantic import BaseModel,ConfigDict, HttpUrl
 
 
 class BookMark(BaseModel):
-    url: str
+    url: HttpUrl
     title: str
     description: str | None = None
     tags: list[str] | None = None
@@ -13,14 +13,14 @@ class BookMarkCreate(BookMark):
     pass
 
 class BookMarkUpdate(BaseModel):
-    url: str | None = None
+    url: HttpUrl | None = None
     title: str | None = None
     description: str | None = None
     tags: list[str] | None = None
 
 class BookMarkPublic(BaseModel):
     id: int
-    url: str
+    url: HttpUrl
     title: str
     description: str | None = None
     tags: list[str] | None = None

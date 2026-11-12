@@ -1,3 +1,5 @@
+import select
+
 from fastapi import APIRouter, HTTPException
 
 from app.dependencies import SessionDep
@@ -19,18 +21,18 @@ def create_bookmark(session: SessionDep,bookmark: BookMarkCreate):
 
 @router.get("/",  response_model=list[BookMarkPublic])
 def get_bookmarks(session: SessionDep):
-    bookmarks_db = session.query(BookMark).all()
+    bookmarks_db = session.scalars(select(BookMark)).all()
     # TODO - ADD FILTERS
 
     if not bookmarks_db:
-        return []
+        raise HTTPException(status_code=404, detail="Bookmark not found")
     return bookmarks_db
 
 @router.get("/{id}", response_model=BookMarkPublic)
 def get_bookmark(id: int, session: SessionDep):
     bookmark_db = session.get(BookMark, id)
     if not bookmark_db:
-        return []
+        raise HTTPException(status_code=404, detail="Bookmark not found")
     return bookmark_db
 
 @router.patch("/{id}", response_model=BookMarkPublic)
